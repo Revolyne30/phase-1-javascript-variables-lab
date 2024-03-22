@@ -1,18 +1,20 @@
-require ( './helpers.js' );
+const fs = require('fs');
+const path = require('path');
+const { companyName } = require('..');
 
-const fs = require('fs')
-const path = require('path')
-
-const js = fs.readFileSync(path.resolve(__dirname, '..', 'index.js'), 'utf-8')
+const js = fs.readFileSync(path.resolve(__dirname, '..', 'index.js'), 'utf-8');
 
 describe('index.js', function () {
-  describe('companyName', function () {
+  eval(js); // This will execute the code in index.js in the current context
+
+  describe('Scuber', function () {
     it('is set as Scuber', function () {
       expect(companyName).to.equal('Scuber');
     });
 
     it('is defined as a const', function () {
-      expect(js).to.match(/const companyName/, "Expected companyName to be a const");
+      const regex = /\bconst\b\s+companyName\s*=/;
+      expect(js).to.match(regex, "Expected companyName to be defined as a const");
     });
   });
 
@@ -22,7 +24,8 @@ describe('index.js', function () {
     });
 
     it('is defined using let', function () {
-      expect(js).to.match(/let mostProfitableNeighborhood/, "Expected mostProfitableNeighborhood to be defined using let");
+      const regex = /\blet\b\s+mostProfitableNeighborhood\s*=/;
+      expect(js).to.match(regex, "Expected mostProfitableNeighborhood to be defined using let");
     });
   });
 
@@ -32,7 +35,8 @@ describe('index.js', function () {
     });
 
     it('is defined using let', function () {
-      expect(js).to.match(/let companyCeo/, "Expected companyCeo to be defined using let");
+      const regex = /\blet\b\s+companyCeo\s*=/;
+      expect(js).to.match(regex, "Expected companyCeo to be defined using let");
     });
   });
 });
